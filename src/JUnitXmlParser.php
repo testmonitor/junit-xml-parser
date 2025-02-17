@@ -22,7 +22,6 @@ class JUnitXmlParser
      * Parse a JUnit XML report.
      *
      * @param string $filePath
-     *
      * @return array
      */
     public function parse(string $filePath): array
@@ -116,7 +115,6 @@ class JUnitXmlParser
      * Determines if the current element matches the provided name.
      *
      * @param string $name
-     *
      * @return bool
      */
     protected function isElement(string $name): bool
@@ -128,7 +126,6 @@ class JUnitXmlParser
      * Determines if the closing element matches the provided name.
      *
      * @param string $name
-     *
      * @return bool
      */
     protected function isEndElement(string $name): bool
