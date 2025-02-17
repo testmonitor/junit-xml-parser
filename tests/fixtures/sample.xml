@@ -1,0 +1,13 @@
+<testsuites>
+    <testsuite name="Main Suite" time="1.23" timestamp="2024-02-17T10:00:00Z">
+        <testsuite name="Sub Suite" time="0.75">
+            <testcase name="Test 1" classname="ExampleTest" time="0.05"/>
+            <testcase name="Test 2" classname="ExampleTest" time="0.10">
+                <failure>Expected true but got false</failure>
+            </testcase>
+            <testcase name="Test 3" classname="ExampleTest" time="0.08">
+                <skipped />
+            </testcase>
+        </testsuite>
+    </testsuite>
+</testsuites>

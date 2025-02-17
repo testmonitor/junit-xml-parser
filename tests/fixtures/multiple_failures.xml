@@ -1,0 +1,8 @@
+<testsuites>
+    <testsuite name="Suite 1">
+        <testcase name="Test With Multiple Failures" classname="TestClass" time="0.25">
+            <failure>First failure message</failure>
+            <failure>Second failure message</failure>
+        </testcase>
+    </testsuite>
+</testsuites>

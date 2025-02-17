@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+    <testsuite name="Main Suite">
+        <testcase name="Test 1" classname="ExampleTest" time="0.05">
+        <failure>Test failed</failure>
+</testsuites>

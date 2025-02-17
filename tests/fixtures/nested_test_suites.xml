@@ -1,0 +1,11 @@
+<testsuites>
+    <testsuite name="Root Suite">
+        <testsuite name="Level 1">
+            <testsuite name="Level 2">
+                <testsuite name="Level 3">
+                    <testcase name="Deep Test" classname="DeepClass" time="0.12"/>
+                </testsuite>
+            </testsuite>
+        </testsuite>
+    </testsuite>
+</testsuites>

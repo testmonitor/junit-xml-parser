@@ -1,0 +1,7 @@
+<testsuites>
+    <testsuite name="Suite 1">
+        <testcase name="Test With Output" classname="TestClass" time="0.15">
+            <system-out>This is a system output</system-out>
+        </testcase>
+    </testsuite>
+</testsuites>
