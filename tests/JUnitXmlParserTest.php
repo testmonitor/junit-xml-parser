@@ -6,6 +6,8 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use TestMonitor\JUnitXmlParser\JUnitXmlParser;
 use TestMonitor\JUnitXmlParser\Models\TestStatus;
+use TestMonitor\JUnitXmlParser\Exceptions\ValidationException;
+use TestMonitor\JUnitXmlParser\Exceptions\FileNotFoundException;
 
 class JUnitXmlParserTest extends TestCase
 {
@@ -42,7 +44,7 @@ class JUnitXmlParserTest extends TestCase
 
         $this->assertEquals('Test 2', $testCases[1]->getName());
         $this->assertEquals(TestStatus::FAILED, $testCases[1]->getStatus());
-        $this->assertEquals('Expected true but got false', $testCases[1]->getFailureMessage());
+        $this->assertEquals('Expected true but got false', $testCases[1]->getFailureMessages()[0]);
 
         $this->assertEquals('Test 3', $testCases[2]->getName());
         $this->assertEquals(TestStatus::SKIPPED, $testCases[2]->getStatus());
@@ -51,10 +53,17 @@ class JUnitXmlParserTest extends TestCase
     #[Test]
     public function it_parses_an_empty_file_correctly(): void
     {
-        $testSuites = $this->parser->parse(__DIR__ . '/fixtures/empty.xml');
+        $this->expectException(ValidationException::class);
 
-        $this->assertIsArray($testSuites);
-        $this->assertCount(0, $testSuites);
+        $testSuites = $this->parser->parse(__DIR__ . '/fixtures/empty.xml');
+    }
+
+    #[Test]
+    public function it_handles_a_non_existing_file_gracefully(): void
+    {
+        $this->expectException(FileNotFoundException::class);
+
+        $this->parser->parse(__DIR__ . '/fixtures/notfound.xml');
     }
 
     #[Test]
@@ -88,8 +97,8 @@ class JUnitXmlParserTest extends TestCase
 
         $this->assertEquals('Test With Multiple Failures', $testCase->getName());
         $this->assertEquals(TestStatus::FAILED, $testCase->getStatus());
-        $this->assertStringContainsString('First failure message', $testCase->getFailureMessage());
-        $this->assertStringContainsString('Second failure message', $testCase->getFailureMessage());
+        $this->assertStringContainsString('First failure message', $testCase->getFailureMessages()[0]);
+        $this->assertStringContainsString('Second failure message', $testCase->getFailureMessages()[1]);
     }
 
     #[Test]
@@ -106,12 +115,9 @@ class JUnitXmlParserTest extends TestCase
     #[Test]
     public function it_handles_missing_attributes_gracefully(): void
     {
-        $testSuites = $this->parser->parse(__DIR__ . '/fixtures/missing_attributes.xml');
+        $this->expectException(\Exception::class);
 
-        $testCase = $testSuites[0]->getTestCases()[0];
-
-        $this->assertNull($testCase->getName());
-        $this->assertNull($testCase->getClassname());
+        $this->parser->parse(__DIR__ . '/fixtures/missing_attributes.xml');
     }
 
     #[Test]

@@ -2,9 +2,13 @@
 
 namespace TestMonitor\JUnitXmlParser;
 
+use Exception;
 use XMLReader;
 use TestMonitor\JUnitXmlParser\Models\TestCase;
 use TestMonitor\JUnitXmlParser\Models\TestSuite;
+use TestMonitor\JUnitXmlParser\Exceptions\ValidationException;
+use TestMonitor\JUnitXmlParser\Exceptions\FileNotFoundException;
+use TestMonitor\JUnitXmlParser\Exceptions\MissingAttributeException;
 
 class JUnitXmlParser
 {
@@ -27,18 +31,44 @@ class JUnitXmlParser
      */
     public function parse(string $filePath): array
     {
+        libxml_use_internal_errors(true);
+
         $this->reader = new XMLReader();
-        $this->reader->open($filePath);
+
+        if (!@$this->reader->open($filePath)) {
+            throw new FileNotFoundException($filePath);
+        }
+
+        $testSuites = [];
 
         while ($this->reader->read()) {
             if ($this->isElement('testsuite')) {
-                $this->testSuites[] = $this->parseTestSuite();
+                $testSuites[] = $this->parseTestSuite();
             }
         }
 
         $this->reader->close();
 
-        return $this->testSuites;
+        $this->throwExceptionWhenValidationFailed();
+
+        return $testSuites;
+    }
+
+    /**
+     * Throws an exception when error(s) occured during parsing.
+     *
+     * @throws \RuntimeException
+     */
+    protected function throwExceptionWhenValidationFailed(): void
+    {
+        $errors = libxml_get_errors();
+
+        if (!empty($errors)) {
+            throw new ValidationException($errors);
+        }
+
+        // Clear errors to avoid accumulation
+        libxml_clear_errors();
     }
 
     /**
@@ -48,6 +78,8 @@ class JUnitXmlParser
      */
     protected function parseTestSuite(): TestSuite
     {
+        $this->validateAttributes(['name']);
+
         $testSuite = new TestSuite(
             $this->reader->getAttribute('name'),
             (float) $this->reader->getAttribute('time'),
@@ -76,6 +108,8 @@ class JUnitXmlParser
      */
     protected function parseTestCase(): TestCase
     {
+        $this->validateAttributes(['name', 'classname']);
+
         $testCase = new TestCase(
             name: $this->reader->getAttribute('name'),
             className: $this->reader->getAttribute('classname'),
@@ -90,7 +124,9 @@ class JUnitXmlParser
         while ($this->reader->read()) {
             if ($this->isEndElement('testcase')) {
                 return $testCase;
-            } elseif ($this->isElement('failure')) {
+            }
+
+            if ($this->isElement('failure')) {
                 $testCase->markFailed($this->readValue());
             } elseif ($this->isElement('skipped')) {
                 $testCase->markSkipped();
@@ -112,6 +148,20 @@ class JUnitXmlParser
         return trim($this->reader->value);
     }
 
+    /**
+     * Validates the presence of a list of attributes for the current element.
+     *
+     * @param array $attributes
+     * @throws \TestMonitor\JUnitXmlParser\Exceptions\MissingAttributeException
+     */
+    protected function validateAttributes(array $attributes): void
+    {
+        foreach ($attributes as $attribute) {
+            if (empty($this->reader->getAttribute($attribute))) {
+                throw new MissingAttributeException($attribute, $this->reader->readOuterXml());
+            }
+        }
+    }
     /**
      * Determines if the current element matches the provided name.
      *

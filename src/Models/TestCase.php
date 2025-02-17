@@ -8,7 +8,7 @@ class TestCase
         protected string $name,
         protected string $className,
         protected TestStatus $status = TestStatus::PASSED,
-        protected ?string $failureMessage = null,
+        protected array $failureMessages = [],
         protected ?float $duration = null,
         protected ?string $timestamp = null
     ) {
@@ -31,7 +31,7 @@ class TestCase
     {
         $this->status = TestStatus::FAILED;
 
-        $this->failureMessage = $message;
+        $this->failureMessages[] = $message;
     }
 
     /**
@@ -73,13 +73,13 @@ class TestCase
     }
 
     /**
-     * Get the reason for failure, when available.
+     * Get the reasons for failure, when available.
      *
-     * @return \TestMonitor\JUnitXmlParser\Models\TestStatus
+     * @return array
      */
-    public function getFailureMessage(): ?string
+    public function getFailureMessages(): array
     {
-        return $this->failureMessage;
+        return $this->failureMessages;
     }
 
     /**
