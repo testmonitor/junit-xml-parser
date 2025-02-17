@@ -34,7 +34,7 @@ class JUnitXmlParser
 
         $this->reader = new XMLReader();
 
-        if (!@$this->reader->open($filePath)) {
+        if (! @$this->reader->open($filePath)) {
             throw new FileNotFoundException($filePath);
         }
 
@@ -62,7 +62,7 @@ class JUnitXmlParser
     {
         $errors = libxml_get_errors();
 
-        if (!empty($errors)) {
+        if (! empty($errors)) {
             throw new ValidationException($errors);
         }
 
@@ -151,6 +151,7 @@ class JUnitXmlParser
      * Validates the presence of a list of attributes for the current element.
      *
      * @param array $attributes
+     *
      * @throws \TestMonitor\JUnitXmlParser\Exceptions\MissingAttributeException
      */
     protected function validateAttributes(array $attributes): void
@@ -161,6 +162,7 @@ class JUnitXmlParser
             }
         }
     }
+
     /**
      * Determines if the current element matches the provided name.
      *
