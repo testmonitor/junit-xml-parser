@@ -58,7 +58,7 @@ class TestSuite
      */
     public function hasTestCases(): bool
     {
-        return !empty($this->testCases);
+        return ! empty($this->testCases);
     }
 
     /**
@@ -78,7 +78,7 @@ class TestSuite
      */
     public function hasNestedSuites(): bool
     {
-        return !empty($this->nestedTestSuites);
+        return ! empty($this->nestedTestSuites);
     }
 
     /**
