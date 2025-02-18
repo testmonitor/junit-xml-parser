@@ -31,8 +31,8 @@ class JUnitXmlParserTest extends TestCase
         $this->assertEquals('2024-02-17T10:00:00Z', $mainSuite->getTimestamp());
 
         // Assertions for nested sub-suite
-        $this->assertCount(1, $mainSuite->getNestedSuites());
-        $subSuite = $mainSuite->getNestedSuites()[0];
+        $this->assertCount(1, $mainSuite->getNestedTestSuites());
+        $subSuite = $mainSuite->getNestedTestSuites()[0];
         $this->assertEquals('Sub Suite', $subSuite->getName());
         $this->assertCount(3, $subSuite->getTestCases());
 
@@ -80,9 +80,9 @@ class JUnitXmlParserTest extends TestCase
         $testSuites = $this->parser->parse(__DIR__ . '/fixtures/nested_test_suites.xml');
 
         $this->assertCount(1, $testSuites);
-        $level1 = $testSuites[0]->getNestedSuites()[0];
-        $level2 = $level1->getNestedSuites()[0];
-        $level3 = $level2->getNestedSuites()[0];
+        $level1 = $testSuites[0]->getNestedTestSuites()[0];
+        $level2 = $level1->getNestedTestSuites()[0];
+        $level3 = $level2->getNestedTestSuites()[0];
 
         $this->assertEquals('Level 3', $level3->getName());
         $this->assertCount(1, $level3->getTestCases());

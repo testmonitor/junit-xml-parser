@@ -93,7 +93,7 @@ class JUnitXmlParser
             if ($this->isElement('testcase')) {
                 $testSuite->addTestCase($this->parseTestCase());
             } elseif ($this->isElement('testsuite')) {
-                $testSuite->addNestedSuite($this->parseTestSuite());
+                $testSuite->addNestedTestSuite($this->parseTestSuite());
             }
         }
 

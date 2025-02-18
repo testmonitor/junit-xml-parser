@@ -36,7 +36,7 @@ class TestSuite
      *
      * @param \TestMonitor\JUnitXmlParser\Models\TestSuite $testSuite
      */
-    public function addNestedSuite(TestSuite $testSuite): void
+    public function addNestedTestSuite(TestSuite $testSuite): void
     {
         $this->nestedTestSuites[] = $testSuite;
     }
@@ -52,19 +52,9 @@ class TestSuite
     }
 
     /**
-     * Determines if this test suite has test cases.
-     *
-     * @return bool
-     */
-    public function hasTestCases(): bool
-    {
-        return ! empty($this->testCases);
-    }
-
-    /**
      * Get the test cases for this test suite.
      *
-     * @return string
+     * @return array
      */
     public function getTestCases(): array
     {
@@ -72,21 +62,11 @@ class TestSuite
     }
 
     /**
-     * Determines if this test suite has nested test suites.
-     *
-     * @return bool
-     */
-    public function hasNestedSuites(): bool
-    {
-        return ! empty($this->nestedTestSuites);
-    }
-
-    /**
      * Get the nested test suites for this test suite.
      *
-     * @return string
+     * @return array
      */
-    public function getNestedSuites(): array
+    public function getNestedTestSuites(): array
     {
         return $this->nestedTestSuites;
     }
