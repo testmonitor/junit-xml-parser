@@ -4,6 +4,7 @@ namespace TestMonitor\JUnitXmlParser;
 
 use Exception;
 use XMLReader;
+use TestMonitor\JUnitXmlParser\Models\Result;
 use TestMonitor\JUnitXmlParser\Models\TestCase;
 use TestMonitor\JUnitXmlParser\Models\TestSuite;
 use TestMonitor\JUnitXmlParser\Exceptions\ValidationException;
@@ -26,9 +27,9 @@ class JUnitXmlParser
      * Parse a JUnit XML report.
      *
      * @param string $filePath
-     * @return array
+     * @return \TestMonitor\JUnitXmlParser\Models\Result
      */
-    public function parse(string $filePath): array
+    public function parse(string $filePath): Result
     {
         libxml_use_internal_errors(true);
 
@@ -50,7 +51,7 @@ class JUnitXmlParser
 
         $this->throwExceptionWhenValidationFailed();
 
-        return $testSuites;
+        return new Result($testSuites);
     }
 
     /**
@@ -80,9 +81,13 @@ class JUnitXmlParser
         $this->validateAttributes(['name']);
 
         $testSuite = new TestSuite(
-            $this->reader->getAttribute('name'),
-            (float) $this->reader->getAttribute('time'),
-            $this->reader->getAttribute('timestamp')
+            name: $this->reader->getAttribute('name'),
+            duration: (float) $this->reader->getAttribute('time'),
+            tests: (int) $this->reader->getAttribute('tests'),
+            assertions: (int) $this->reader->getAttribute('assertions'),
+            errors: (int) $this->reader->getAttribute('errors'),
+            failures: (int) $this->reader->getAttribute('failures'),
+            skipped: (int) $this->reader->getAttribute('skipped'),
         );
 
         while ($this->reader->read()) {
@@ -113,7 +118,7 @@ class JUnitXmlParser
             name: $this->reader->getAttribute('name'),
             className: $this->reader->getAttribute('classname'),
             duration: (float) $this->reader->getAttribute('time'),
-            timestamp: $this->reader->getAttribute('timestamp')
+            assertions: (int) $this->reader->getAttribute('assertions')
         );
 
         if ($this->reader->isEmptyElement) {

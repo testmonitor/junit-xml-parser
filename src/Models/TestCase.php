@@ -10,7 +10,7 @@ class TestCase
         protected TestStatus $status = TestStatus::PASSED,
         protected array $failureMessages = [],
         protected ?float $duration = null,
-        protected ?string $timestamp = null
+        protected ?int $assertions = null
     ) {
     }
 
@@ -93,12 +93,12 @@ class TestCase
     }
 
     /**
-     * Get the test case execution timestamp.
+     * Get the number of assertions, when available.
      *
-     * @return null|string
+     * @return null|int
      */
-    public function getTimestamp(): ?string
+    public function getNumberOfAssertions(): ?int
     {
-        return $this->timestamp;
+        return $this->assertions;
     }
 }

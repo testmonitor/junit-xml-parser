@@ -17,7 +17,11 @@ class TestSuite
     public function __construct(
         protected string $name,
         protected ?float $duration = null,
-        protected ?string $timestamp = null
+        protected ?int $tests = null,
+        protected ?int $assertions = null,
+        protected ?int $errors = null,
+        protected ?int $failures = null,
+        protected ?int $skipped = null,
     ) {
     }
 
@@ -82,12 +86,52 @@ class TestSuite
     }
 
     /**
-     * Get the test suite execution timestamp.
+     * Get the number of the test cases, when available.
      *
-     * @return null|string
+     * @return null|int
      */
-    public function getTimestamp(): ?string
+    public function getNumberOfTests(): ?int
     {
-        return $this->timestamp;
+        return $this->tests;
+    }
+
+    /**
+     * Get the total number of assertions, when available.
+     *
+     * @return null|int
+     */
+    public function getNumberOfAssertions(): ?int
+    {
+        return $this->assertions;
+    }
+
+    /**
+     * Get the total number of errors, when available.
+     *
+     * @return null|int
+     */
+    public function getNumberOfErrors(): ?int
+    {
+        return $this->errors;
+    }
+
+    /**
+     * Get the total number of failures, when available.
+     *
+     * @return null|int
+     */
+    public function getNumberOfFailures(): ?int
+    {
+        return $this->failures;
+    }
+
+    /**
+     * Get the total number of skipped test cases, when available.
+     *
+     * @return null|int
+     */
+    public function getNumberOfSkipped(): ?int
+    {
+        return $this->skipped;
     }
 }

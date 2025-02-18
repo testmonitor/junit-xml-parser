@@ -4,10 +4,12 @@ namespace TestMonitor\JUnitXmlParser\Tests;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use TestMonitor\JUnitXmlParser\Models\Result;
 use TestMonitor\JUnitXmlParser\JUnitXmlParser;
 use TestMonitor\JUnitXmlParser\Models\TestStatus;
 use TestMonitor\JUnitXmlParser\Exceptions\ValidationException;
 use TestMonitor\JUnitXmlParser\Exceptions\FileNotFoundException;
+use TestMonitor\JUnitXmlParser\Exceptions\MissingAttributeException;
 
 class JUnitXmlParserTest extends TestCase
 {
@@ -21,14 +23,26 @@ class JUnitXmlParserTest extends TestCase
     #[Test]
     public function it_parses_a_junit_xml_report(): void
     {
-        $testSuites = $this->parser->parse(__DIR__ . '/fixtures/sample.xml');
+        $result = $this->parser->parse(__DIR__ . '/fixtures/sample.xml');
 
         // Assertions for main suite
-        $this->assertCount(1, $testSuites);
-        $mainSuite = $testSuites[0];
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertCount(1, $result->getTestSuites());
+        $this->assertEquals(1.23, $result->getTotalDuration());
+        $this->assertEquals(3, $result->getTotalNumberOfTests());
+        $this->assertEquals(6, $result->getTotalNumberOfAssertions());
+        $this->assertEquals(0, $result->getTotalNumberOfErrors());
+        $this->assertEquals(1, $result->getTotalNumberOfFailures());
+        $this->assertEquals(1, $result->getTotalNumberOfSkipped());
+
+        $mainSuite = $result->getTestSuites()[0];
         $this->assertEquals('Main Suite', $mainSuite->getName());
         $this->assertEquals(1.23, $mainSuite->getDuration());
-        $this->assertEquals('2024-02-17T10:00:00Z', $mainSuite->getTimestamp());
+        $this->assertEquals(3, $mainSuite->getNumberOfTests());
+        $this->assertEquals(6, $mainSuite->getNumberOfAssertions());
+        $this->assertEquals(0, $mainSuite->getNumberOfErrors());
+        $this->assertEquals(1, $mainSuite->getNumberOfFailures());
+        $this->assertEquals(1, $mainSuite->getNumberOfSkipped());
 
         // Assertions for nested sub-suite
         $this->assertCount(1, $mainSuite->getNestedTestSuites());
@@ -41,13 +55,19 @@ class JUnitXmlParserTest extends TestCase
 
         $this->assertEquals('Test 1', $testCases[0]->getName());
         $this->assertEquals(TestStatus::PASSED, $testCases[0]->getStatus());
+        $this->assertEquals(0.05, $testCases[0]->getDuration());
+        $this->assertEquals(2, $testCases[0]->getNumberOfAssertions());
 
         $this->assertEquals('Test 2', $testCases[1]->getName());
         $this->assertEquals(TestStatus::FAILED, $testCases[1]->getStatus());
         $this->assertEquals('Expected true but got false', $testCases[1]->getFailureMessages()[0]);
+        $this->assertEquals(0.1, $testCases[1]->getDuration());
+        $this->assertEquals(3, $testCases[1]->getNumberOfAssertions());
 
         $this->assertEquals('Test 3', $testCases[2]->getName());
         $this->assertEquals(TestStatus::SKIPPED, $testCases[2]->getStatus());
+        $this->assertEquals(0.08, $testCases[2]->getDuration());
+        $this->assertEquals(1, $testCases[2]->getNumberOfAssertions());
     }
 
     #[Test]
@@ -55,7 +75,7 @@ class JUnitXmlParserTest extends TestCase
     {
         $this->expectException(ValidationException::class);
 
-        $testSuites = $this->parser->parse(__DIR__ . '/fixtures/empty.xml');
+        $this->parser->parse(__DIR__ . '/fixtures/empty.xml');
     }
 
     #[Test]
@@ -69,7 +89,7 @@ class JUnitXmlParserTest extends TestCase
     #[Test]
     public function it_handles_malformed_xml_gracefully(): void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(ValidationException::class);
 
         $this->parser->parse(__DIR__ . '/fixtures/malformed.xml');
     }
@@ -77,10 +97,11 @@ class JUnitXmlParserTest extends TestCase
     #[Test]
     public function it_parses_deeply_nested_suites(): void
     {
-        $testSuites = $this->parser->parse(__DIR__ . '/fixtures/nested_test_suites.xml');
+        $result = $this->parser->parse(__DIR__ . '/fixtures/nested_test_suites.xml');
 
-        $this->assertCount(1, $testSuites);
-        $level1 = $testSuites[0]->getNestedTestSuites()[0];
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertCount(1, $result->getTestSuites());
+        $level1 = $result->getTestSuites()[0]->getNestedTestSuites()[0];
         $level2 = $level1->getNestedTestSuites()[0];
         $level3 = $level2->getNestedTestSuites()[0];
 
@@ -91,10 +112,11 @@ class JUnitXmlParserTest extends TestCase
     #[Test]
     public function it_parses_multiple_failures_correctly(): void
     {
-        $testSuites = $this->parser->parse(__DIR__ . '/fixtures/multiple_failures.xml');
+        $result = $this->parser->parse(__DIR__ . '/fixtures/multiple_failures.xml');
 
-        $testCase = $testSuites[0]->getTestCases()[0];
+        $testCase = $result->getTestSuites()[0]->getTestCases()[0];
 
+        $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals('Test With Multiple Failures', $testCase->getName());
         $this->assertEquals(TestStatus::FAILED, $testCase->getStatus());
         $this->assertStringContainsString('First failure message', $testCase->getFailureMessages()[0]);
@@ -104,9 +126,9 @@ class JUnitXmlParserTest extends TestCase
     #[Test]
     public function it_ignores_system_output(): void
     {
-        $testSuites = $this->parser->parse(__DIR__ . '/fixtures/system_output.xml');
+        $result = $this->parser->parse(__DIR__ . '/fixtures/system_output.xml');
 
-        $testCase = $testSuites[0]->getTestCases()[0];
+        $testCase = $result->getTestSuites()[0]->getTestCases()[0];
 
         $this->assertEquals('Test With Output', $testCase->getName());
         $this->assertEquals(TestStatus::PASSED, $testCase->getStatus());
@@ -115,7 +137,7 @@ class JUnitXmlParserTest extends TestCase
     #[Test]
     public function it_handles_missing_attributes_gracefully(): void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(MissingAttributeException::class);
 
         $this->parser->parse(__DIR__ . '/fixtures/missing_attributes.xml');
     }
@@ -123,13 +145,14 @@ class JUnitXmlParserTest extends TestCase
     #[Test]
     public function it_handles_a_large_xml_file(): void
     {
-        $testSuites = $this->parser->parse(__DIR__ . '/fixtures/large.xml');
+        $result = $this->parser->parse(__DIR__ . '/fixtures/large.xml');
 
-        $this->assertEquals(10, count($testSuites));
-        $this->assertEquals(1000, count($testSuites[0]->getTestCases()));
-        $this->assertEquals(1000, count($testSuites[9]->getTestCases()));
-        $this->assertEquals(TestStatus::PASSED, $testSuites[9]->getTestCases()[1]->getStatus());
-        $this->assertEquals(TestStatus::FAILED, $testSuites[9]->getTestCases()[8]->getStatus());
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertEquals(10, count($result->getTestSuites()));
+        $this->assertEquals(1000, count($result->getTestSuites()[0]->getTestCases()));
+        $this->assertEquals(1000, count($result->getTestSuites()[9]->getTestCases()));
+        $this->assertEquals(TestStatus::PASSED, $result->getTestSuites()[9]->getTestCases()[1]->getStatus());
+        $this->assertEquals(TestStatus::FAILED, $result->getTestSuites()[9]->getTestCases()[8]->getStatus());
 
         // Parsing a file with 10.000 test cases should not use 15MB RAM or more.
         $this->assertLessThanOrEqual(1024 * 1024 * 15, memory_get_usage());

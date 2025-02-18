@@ -1,11 +1,11 @@
 <testsuites>
-    <testsuite name="Main Suite" time="1.23" timestamp="2024-02-17T10:00:00Z">
+    <testsuite name="Main Suite" tests="3" assertions="6" errors="0" failures="1" skipped="1" time="1.23">
         <testsuite name="Sub Suite" time="0.75">
-            <testcase name="Test 1" classname="ExampleTest" time="0.05"/>
-            <testcase name="Test 2" classname="ExampleTest" time="0.10">
+            <testcase name="Test 1" classname="ExampleTest" assertions="2" time="0.05"/>
+            <testcase name="Test 2" classname="ExampleTest" assertions="3" time="0.10">
                 <failure>Expected true but got false</failure>
             </testcase>
-            <testcase name="Test 3" classname="ExampleTest" time="0.08">
+            <testcase name="Test 3" classname="ExampleTest" assertions="1" time="0.08">
                 <skipped />
             </testcase>
         </testsuite>
