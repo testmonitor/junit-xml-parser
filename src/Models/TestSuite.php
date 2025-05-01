@@ -58,7 +58,7 @@ class TestSuite
     /**
      * Get the test cases for this test suite.
      *
-     * @return array
+     * @return array<\TestMonitor\JUnitXmlParser\Models\TestCase>
      */
     public function getTestCases(): array
     {
@@ -68,7 +68,7 @@ class TestSuite
     /**
      * Get the nested test suites for this test suite.
      *
-     * @return array
+     * @return array<\TestMonitor\JUnitXmlParser\Models\TestSuite>
      */
     public function getNestedTestSuites(): array
     {
