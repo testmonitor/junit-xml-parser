@@ -2,7 +2,6 @@
 
 namespace TestMonitor\JUnitXmlParser;
 
-use Exception;
 use XMLReader;
 use TestMonitor\JUnitXmlParser\Models\Result;
 use TestMonitor\JUnitXmlParser\Models\TestCase;
@@ -89,6 +88,10 @@ class JUnitXmlParser
             failures: (int) $this->reader->getAttribute('failures'),
             skipped: (int) $this->reader->getAttribute('skipped'),
         );
+
+        if ($this->reader->isEmptyElement) {
+            return $testSuite;
+        }
 
         while ($this->reader->read()) {
             if ($this->isEndElement('testsuite')) {

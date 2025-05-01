@@ -1,0 +1,9 @@
+<testsuites>
+    <testsuite name="Main Suite" tests="2" assertions="3" errors="0" failures="0" skipped="0" time="1.5">
+        <testsuite name="Empty" time="0.75" />
+        <testsuite name="Something" time="0.75">
+            <testcase name="Test 1" classname="ExampleTest" assertions="2" time="0.05"/>
+            <testcase name="Test 2" classname="ExampleTest" assertions="1" time="0.7"/>
+        </testsuite>
+    </testsuite>
+</testsuites>

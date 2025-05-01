@@ -110,6 +110,23 @@ class JUnitXmlParserTest extends TestCase
     }
 
     #[Test]
+    public function it_parses_empty_suites(): void
+    {
+        $result = $this->parser->parse(__DIR__ . '/fixtures/empty_suite.xml');
+
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertCount(1, $result->getTestSuites());
+
+        $empty = $result->getTestSuites()[0]->getNestedTestSuites()[0];
+        $this->assertEquals('Empty', $empty->getName());
+        $this->assertCount(0, $empty->getTestCases());
+
+        $filled = $result->getTestSuites()[0]->getNestedTestSuites()[1];
+        $this->assertEquals('Something', $filled->getName());
+        $this->assertCount(2, $filled->getTestCases());
+    }
+
+    #[Test]
     public function it_parses_multiple_failures_correctly(): void
     {
         $result = $this->parser->parse(__DIR__ . '/fixtures/multiple_failures.xml');
