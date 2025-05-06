@@ -1,6 +1,7 @@
 <testsuites>
     <testsuite name="Suite 1">
         <testcase name="Test With Output" classname="TestClass" time="0.15">
+            <failure>Expected true but got false</failure>
             <system-err>Something went wrong</system-err>
         </testcase>
     </testsuite>
