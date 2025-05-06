@@ -141,7 +141,29 @@ class JUnitXmlParserTest extends TestCase
     }
 
     #[Test]
-    public function it_parses_system_out_data(): void
+    public function it_parses_system_out_data_in_test_suites(): void
+    {
+        $result = $this->parser->parse(__DIR__ . '/fixtures/system_output.xml');
+
+        $testSuite = $result->getTestSuites()[0];
+
+        $this->assertEquals('Suite 1', $testSuite->getName());
+        $this->assertEquals('This is system output for a test suite', $testSuite->getSystemOut());
+    }
+
+    #[Test]
+    public function it_parses_system_err_data_in_test_suites(): void
+    {
+        $result = $this->parser->parse(__DIR__ . '/fixtures/system_error.xml');
+
+        $testSuite = $result->getTestSuites()[0];
+
+        $this->assertEquals('Suite 1', $testSuite->getName());
+        $this->assertEquals('Something went wrong in this suite', $testSuite->getSystemErr());
+    }
+
+    #[Test]
+    public function it_parses_system_out_data_in_test_cases(): void
     {
         $result = $this->parser->parse(__DIR__ . '/fixtures/system_output.xml');
 
@@ -149,11 +171,11 @@ class JUnitXmlParserTest extends TestCase
 
         $this->assertEquals('Test With Output', $testCase->getName());
         $this->assertEquals(TestStatus::PASSED, $testCase->getStatus());
-        $this->assertEquals('This is system output', $testCase->getSystemOut());
+        $this->assertEquals('This is system output for a test case', $testCase->getSystemOut());
     }
 
     #[Test]
-    public function it_parses_system_err_data(): void
+    public function it_parses_system_err_data_in_test_cases(): void
     {
         $result = $this->parser->parse(__DIR__ . '/fixtures/system_error.xml');
 
@@ -161,7 +183,7 @@ class JUnitXmlParserTest extends TestCase
 
         $this->assertEquals('Test With Output', $testCase->getName());
         $this->assertEquals(TestStatus::FAILED, $testCase->getStatus());
-        $this->assertEquals('Something went wrong', $testCase->getSystemErr());
+        $this->assertEquals('Something went wrong in this test case', $testCase->getSystemErr());
     }
 
     #[Test]

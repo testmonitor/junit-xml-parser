@@ -22,6 +22,8 @@ class TestSuite
         protected ?int $errors = null,
         protected ?int $failures = null,
         protected ?int $skipped = null,
+        protected ?string $systemOut = null,
+        protected ?string $systemErr = null
     ) {
     }
 
@@ -133,5 +135,45 @@ class TestSuite
     public function getNumberOfSkipped(): ?int
     {
         return $this->skipped;
+    }
+
+    /**
+     * Set the test suite system out data.
+     *
+     * @param string $value
+     */
+    public function setSystemOut(string $value): void
+    {
+        $this->systemOut = html_entity_decode(trim($value));
+    }
+
+    /**
+     * Get the system out data, when available.
+     *
+     * @return null|string
+     */
+    public function getSystemOut(): ?string
+    {
+        return $this->systemOut;
+    }
+
+    /**
+     * Set the test suite system error data.
+     *
+     * @param string $value
+     */
+    public function setSystemErr(string $value): void
+    {
+        $this->systemErr = html_entity_decode(trim($value));
+    }
+
+    /**
+     * Get the system error data, when available.
+     *
+     * @return null|string
+     */
+    public function getSystemErr(): ?string
+    {
+        return $this->systemErr;
     }
 }

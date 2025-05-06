@@ -102,6 +102,10 @@ class JUnitXmlParser
                 $testSuite->addTestCase($this->parseTestCase());
             } elseif ($this->isElement('testsuite')) {
                 $testSuite->addNestedTestSuite($this->parseTestSuite());
+            } elseif ($this->isElement('system-out')) {
+                $testSuite->setSystemOut($this->readValue());
+            } elseif ($this->isElement('system-err')) {
+                $testSuite->setSystemErr($this->readValue());
             }
         }
 
