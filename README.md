@@ -88,6 +88,30 @@ foreach ($testSuites as $suite) {
 }
 ```
 
+### Processing System Out and System Err
+
+This example demonstrates how to retrieve the information for the system-out and system-err tags:
+
+```php
+use TestMonitor\JUnitXmlParser\JUnitXmlParser;
+use TestMonitor\JUnitXmlParser\Enums\TestStatus;
+
+$parser = new JUnitXmlParser();
+$result = $parser->parse('tests/results.xml');
+
+foreach ($result->getTestSuites() as $suite) {
+    foreach ($suite->getTestCases() as $testCase) {
+        if ($testCase->getStatus() === TestStatus::PASSED) {
+            echo "Test '{$testCase->getName()}' passed:\n";
+            echo $testCase->getSystemOut() . "\n\n";
+        } else {
+            echo "Test '{$testCase->getName()}' didn't pass:\n";
+            echo $testCase->getSystemErr() . "\n\n";
+        }
+    }
+}
+```
+
 ### Extracting Execution Time and Timestamp
 
 JUnit XML reports include execution times and timestamps, which can be accessed as shown below.

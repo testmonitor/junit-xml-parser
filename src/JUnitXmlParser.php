@@ -137,6 +137,10 @@ class JUnitXmlParser
                 $testCase->markFailed($this->readValue());
             } elseif ($this->isElement('skipped')) {
                 $testCase->markSkipped();
+            } elseif ($this->isElement('system-out')) {
+                $testCase->setSystemOut($this->readValue());
+            } elseif ($this->isElement('system-err')) {
+                $testCase->setSystemErr($this->readValue());
             }
         }
 

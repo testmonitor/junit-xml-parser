@@ -141,7 +141,7 @@ class JUnitXmlParserTest extends TestCase
     }
 
     #[Test]
-    public function it_ignores_system_output(): void
+    public function it_parses_system_output(): void
     {
         $result = $this->parser->parse(__DIR__ . '/fixtures/system_output.xml');
 
@@ -149,6 +149,19 @@ class JUnitXmlParserTest extends TestCase
 
         $this->assertEquals('Test With Output', $testCase->getName());
         $this->assertEquals(TestStatus::PASSED, $testCase->getStatus());
+        $this->assertEquals('This is system output', $testCase->getSystemOut());
+    }
+
+    #[Test]
+    public function it_parses_system_error(): void
+    {
+        $result = $this->parser->parse(__DIR__ . '/fixtures/system_error.xml');
+
+        $testCase = $result->getTestSuites()[0]->getTestCases()[0];
+
+        $this->assertEquals('Test With Output', $testCase->getName());
+        $this->assertEquals(TestStatus::PASSED, $testCase->getStatus());
+        $this->assertEquals('Soemthing went wrong', $testCase->getSystemErr());
     }
 
     #[Test]
