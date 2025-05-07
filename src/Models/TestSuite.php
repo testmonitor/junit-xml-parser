@@ -14,6 +14,11 @@ class TestSuite
      */
     protected array $nestedTestSuites = [];
 
+    /**
+     * @var array
+     */
+    protected array $properties = [];
+
     public function __construct(
         protected string $name,
         protected ?float $duration = null,
@@ -135,6 +140,24 @@ class TestSuite
     public function getNumberOfSkipped(): ?int
     {
         return $this->skipped;
+    }
+
+    /**
+     * Set the test suite properties.
+     *
+     * @param string $value
+     */
+    public function setProperties(array $properties): void
+    {
+        $this->properties = $properties;
+    }
+
+    /**
+     * Get the test suite properties.
+     */
+    public function getProperties(): array
+    {
+        return $this->properties;
     }
 
     /**

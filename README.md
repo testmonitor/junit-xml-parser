@@ -88,6 +88,25 @@ foreach ($testSuites as $suite) {
 }
 ```
 
+### Handling Properties
+
+This example demonstrates how to retrieve the property keys and values:
+
+```php
+use TestMonitor\JUnitXmlParser\JUnitXmlParser;
+
+$parser = new JUnitXmlParser();
+$result = $parser->parse('tests/results.xml');
+
+foreach ($result->getTestSuites() as $suite) {
+    echo "Suite: {$suite->getName()}\n";
+
+    foreach ($suite->getProperties() as $key => $value) {
+        echo "$key: $value\n";
+    }
+}
+```
+
 ### Processing System Out and System Err
 
 This example demonstrates how to retrieve the information for the system-out and system-err tags:

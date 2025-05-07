@@ -1,0 +1,14 @@
+<testsuites>
+  <testsuite name="Suite With Properties" tests="1" failures="0">
+    <properties>
+      <property name="browser" value="Chrome"/>
+      <property name="env" value="staging"/>
+    </properties>
+    <testcase name="Test With Properties" classname="Tests.Example" time="1.23">
+      <properties>
+        <property name="retry" value="true"/>
+        <property name="timeout" value="5000"/>
+      </properties>
+    </testcase>
+  </testsuite>
+</testsuites>
