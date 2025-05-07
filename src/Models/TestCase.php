@@ -10,7 +10,9 @@ class TestCase
         protected TestStatus $status = TestStatus::PASSED,
         protected array $failureMessages = [],
         protected ?float $duration = null,
-        protected ?int $assertions = null
+        protected ?int $assertions = null,
+        protected ?string $systemOut = null,
+        protected ?string $systemErr = null
     ) {
     }
 
@@ -100,5 +102,45 @@ class TestCase
     public function getNumberOfAssertions(): ?int
     {
         return $this->assertions;
+    }
+
+    /**
+     * Set the test case system out data.
+     *
+     * @param string $value
+     */
+    public function setSystemOut(string $value): void
+    {
+        $this->systemOut = html_entity_decode(trim($value));
+    }
+
+    /**
+     * Get the system out data, when available.
+     *
+     * @return null|string
+     */
+    public function getSystemOut(): ?string
+    {
+        return $this->systemOut;
+    }
+
+    /**
+     * Set the test case system error data.
+     *
+     * @param string $value
+     */
+    public function setSystemErr(string $value): void
+    {
+        $this->systemErr = html_entity_decode(trim($value));
+    }
+
+    /**
+     * Get the system error data, when available.
+     *
+     * @return null|string
+     */
+    public function getSystemErr(): ?string
+    {
+        return $this->systemErr;
     }
 }

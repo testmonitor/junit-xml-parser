@@ -1,7 +1,8 @@
 <testsuites>
     <testsuite name="Suite 1">
+        <system-out>This is system output for a test suite</system-out>
         <testcase name="Test With Output" classname="TestClass" time="0.15">
-            <system-out>This is a system output</system-out>
+            <system-out>This is system output for a test case</system-out>
         </testcase>
     </testsuite>
 </testsuites>
