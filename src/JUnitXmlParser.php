@@ -106,6 +106,8 @@ class JUnitXmlParser
                 $testSuite->setSystemOut($this->readValue());
             } elseif ($this->isElement('system-err')) {
                 $testSuite->setSystemErr($this->readValue());
+            } elseif ($this->isElement('properties')) {
+                $testSuite->setProperties($this->parseProperties());
             }
         }
 
@@ -145,10 +147,39 @@ class JUnitXmlParser
                 $testCase->setSystemOut($this->readValue());
             } elseif ($this->isElement('system-err')) {
                 $testCase->setSystemErr($this->readValue());
+            } elseif ($this->isElement('properties')) {
+                $testCase->setProperties($this->parseProperties());
             }
         }
 
         return $testCase;
+    }
+
+    /**
+     * Parses properties within a <properties> element.
+     *
+     * @return array
+     */
+    protected function parseProperties(): array
+    {
+        $properties = [];
+
+        while ($this->reader->read()) {
+            if ($this->isEndElement('properties')) {
+                break;
+            }
+
+            if ($this->isElement('property')) {
+                $name = $this->reader->getAttribute('name');
+                $value = $this->reader->getAttribute('value');
+
+                if ($name !== null) {
+                    $properties[$name] = $value ?? '';
+                }
+            }
+        }
+
+        return $properties;
     }
 
     /**

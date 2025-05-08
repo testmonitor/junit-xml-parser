@@ -141,6 +141,27 @@ class JUnitXmlParserTest extends TestCase
     }
 
     #[Test]
+    public function it_parses_test_suite_and_test_case_properties(): void
+    {
+        $parser = new JUnitXmlParser();
+        $result = $parser->parse(__DIR__ . '/fixtures/properties.xml');
+
+        $suite = $result->getTestSuites()[0];
+        $this->assertEquals('Suite With Properties', $suite->getName());
+
+        // Suite-level properties
+        $suiteProps = $suite->getProperties();
+        $this->assertEquals('Chrome', $suiteProps['browser'] ?? null);
+        $this->assertEquals('staging', $suiteProps['env'] ?? null);
+
+        // Test case properties
+        $testCase = $suite->getTestCases()[0];
+        $testProps = $testCase->getProperties();
+        $this->assertEquals('true', $testProps['retry'] ?? null);
+        $this->assertEquals('5000', $testProps['timeout'] ?? null);
+    }
+
+    #[Test]
     public function it_parses_system_out_data_in_test_suites(): void
     {
         $result = $this->parser->parse(__DIR__ . '/fixtures/system_output.xml');

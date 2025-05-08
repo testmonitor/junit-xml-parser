@@ -4,6 +4,11 @@ namespace TestMonitor\JUnitXmlParser\Models;
 
 class TestCase
 {
+    /**
+     * @var array
+     */
+    protected array $properties = [];
+
     public function __construct(
         protected string $name,
         protected string $className,
@@ -102,6 +107,24 @@ class TestCase
     public function getNumberOfAssertions(): ?int
     {
         return $this->assertions;
+    }
+
+    /**
+     * Set the test case properties.
+     *
+     * @param string $value
+     */
+    public function setProperties(array $properties): void
+    {
+        $this->properties = $properties;
+    }
+
+    /**
+     * Get the test case properties.
+     */
+    public function getProperties(): array
+    {
+        return $this->properties;
     }
 
     /**
