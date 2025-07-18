@@ -1,4 +1,4 @@
-# TestMonitor JUnit Parser
+# JUnit XML Parser
 
 [![Latest Stable Version](https://poser.pugx.org/testmonitor/junit-xml-parser/v/stable)](https://packagist.org/packages/testmonitor/junit-xml-parser)
 [![CircleCI](https://img.shields.io/circleci/project/github/testmonitor/junit-xml-parser.svg)](https://circleci.com/gh/testmonitor/junit-xml-parser)
