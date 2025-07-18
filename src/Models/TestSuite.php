@@ -19,6 +19,17 @@ class TestSuite
      */
     protected array $properties = [];
 
+    /**
+     * @param string $name
+     * @param null|float $duration
+     * @param null|int $tests
+     * @param null|int $assertions
+     * @param null|int $errors
+     * @param null|int $failures
+     * @param null|int $skipped
+     * @param null|string $systemOut
+     * @param null|string $systemErr
+     */
     public function __construct(
         protected string $name,
         protected ?float $duration = null,
@@ -145,7 +156,7 @@ class TestSuite
     /**
      * Set the test suite properties.
      *
-     * @param string $value
+     * @param array $properties
      */
     public function setProperties(array $properties): void
     {
