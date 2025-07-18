@@ -4,6 +4,9 @@ namespace TestMonitor\JUnitXmlParser\Models;
 
 class Result
 {
+    /**
+     * @param array $testSuites
+     */
     public function __construct(protected array $testSuites = [])
     {
     }

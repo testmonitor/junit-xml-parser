@@ -9,6 +9,16 @@ class TestCase
      */
     protected array $properties = [];
 
+    /**
+     * @param string $name
+     * @param string $className
+     * @param \TestMonitor\JUnitXmlParser\Models\TestStatus $status
+     * @param array $failureMessages
+     * @param null|float $duration
+     * @param null|int $assertions
+     * @param null|string $systemOut
+     * @param null|string $systemErr
+     */
     public function __construct(
         protected string $name,
         protected string $className,
@@ -112,7 +122,7 @@ class TestCase
     /**
      * Set the test case properties.
      *
-     * @param string $value
+     * @param array $properties
      */
     public function setProperties(array $properties): void
     {
