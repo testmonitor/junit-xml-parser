@@ -1,6 +1,6 @@
 {
     "name": "testmonitor/junit-xml-parser",
-    "description": "The TestMonitor JUnit XML parser.",
+    "description": "This package provides a very basic, convenient parser for JUnit XML reports.",
     "type": "library",
     "keywords": ["testmonitor", "junit", "xml", "parser"],
     "authors": [
