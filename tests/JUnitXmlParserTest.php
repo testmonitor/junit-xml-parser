@@ -29,18 +29,18 @@ class JUnitXmlParserTest extends TestCase
         $this->assertInstanceOf(Result::class, $result);
         $this->assertCount(1, $result->getTestSuites());
         $this->assertEquals(1.23, $result->getTotalDuration());
-        $this->assertEquals(3, $result->getTotalNumberOfTests());
-        $this->assertEquals(6, $result->getTotalNumberOfAssertions());
-        $this->assertEquals(0, $result->getTotalNumberOfErrors());
+        $this->assertEquals(4, $result->getTotalNumberOfTests());
+        $this->assertEquals(8, $result->getTotalNumberOfAssertions());
+        $this->assertEquals(1, $result->getTotalNumberOfErrors());
         $this->assertEquals(1, $result->getTotalNumberOfFailures());
         $this->assertEquals(1, $result->getTotalNumberOfSkipped());
 
         $mainSuite = $result->getTestSuites()[0];
         $this->assertEquals('Main Suite', $mainSuite->getName());
         $this->assertEquals(1.23, $mainSuite->getDuration());
-        $this->assertEquals(3, $mainSuite->getNumberOfTests());
-        $this->assertEquals(6, $mainSuite->getNumberOfAssertions());
-        $this->assertEquals(0, $mainSuite->getNumberOfErrors());
+        $this->assertEquals(4, $mainSuite->getNumberOfTests());
+        $this->assertEquals(8, $mainSuite->getNumberOfAssertions());
+        $this->assertEquals(1, $mainSuite->getNumberOfErrors());
         $this->assertEquals(1, $mainSuite->getNumberOfFailures());
         $this->assertEquals(1, $mainSuite->getNumberOfSkipped());
 
@@ -48,7 +48,7 @@ class JUnitXmlParserTest extends TestCase
         $this->assertCount(1, $mainSuite->getNestedTestSuites());
         $subSuite = $mainSuite->getNestedTestSuites()[0];
         $this->assertEquals('Sub Suite', $subSuite->getName());
-        $this->assertCount(3, $subSuite->getTestCases());
+        $this->assertCount(4, $subSuite->getTestCases());
 
         // Assertions for test cases
         $testCases = $subSuite->getTestCases();
@@ -68,6 +68,11 @@ class JUnitXmlParserTest extends TestCase
         $this->assertEquals(TestStatus::SKIPPED, $testCases[2]->getStatus());
         $this->assertEquals(0.08, $testCases[2]->getDuration());
         $this->assertEquals(1, $testCases[2]->getNumberOfAssertions());
+
+        $this->assertEquals('Test 4', $testCases[3]->getName());
+        $this->assertEquals(TestStatus::FAILED, $testCases[3]->getStatus());
+        $this->assertEquals(0.01, $testCases[3]->getDuration());
+        $this->assertEquals(2, $testCases[3]->getNumberOfAssertions());
     }
 
     #[Test]

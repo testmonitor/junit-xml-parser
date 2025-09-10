@@ -141,6 +141,8 @@ class JUnitXmlParser
 
             if ($this->isElement('failure')) {
                 $testCase->markFailed($this->readValue());
+            } elseif ($this->isElement('error')) {
+                $testCase->markFailed($this->readValue());
             } elseif ($this->isElement('skipped')) {
                 $testCase->markSkipped();
             } elseif ($this->isElement('system-out')) {
