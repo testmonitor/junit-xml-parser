@@ -1,0 +1,9 @@
+<testsuites>
+    <testsuite name="Main Suite" tests="1" assertions="2" errors="0" failures="1" skipped="0" time="1.23">
+        <testcase name="Test With CDATA" classname="CDATA" assertions="2" time="0.05">
+            <failure>
+                <![CDATA[Expected true but got false]]>
+            </failure>
+        </testcase>
+    </testsuite>
+</testsuites>

@@ -141,6 +141,19 @@ class JUnitXmlParserTest extends TestCase
     }
 
     #[Test]
+    public function it_parses_failure_values_with_cdata_correctly(): void
+    {
+        $result = $this->parser->parse(__DIR__ . '/fixtures/cdata.xml');
+
+        $testCase = $result->getTestSuites()[0]->getTestCases()[0];
+
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertEquals('Test With CDATA', $testCase->getName());
+        $this->assertEquals(TestStatus::FAILED, $testCase->getStatus());
+        $this->assertEquals('Expected true but got false', $testCase->getFailureMessages()[0]);
+    }
+
+    #[Test]
     public function it_parses_test_suite_and_test_case_properties(): void
     {
         $parser = new JUnitXmlParser();
