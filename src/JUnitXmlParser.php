@@ -189,9 +189,7 @@ class JUnitXmlParser
      */
     protected function readValue(): string
     {
-        $this->reader->read();
-
-        return trim($this->reader->value);
+        return trim($this->reader->readString());
     }
 
     /**
