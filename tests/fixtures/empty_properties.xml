@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+    <testsuite name="Test Suite With Empty Properties" tests="2" skipped="0" failures="0" errors="0" time="0.15" timestamp="2025-09-24T10:00:00" hostname="test-machine" id="0">
+        <properties />
+        <testcase classname="ExampleTests" name="Test One" time="0.05" />
+        <testcase classname="ExampleTests" name="Test Two" time="0.10" />
+        <system-out>Some output</system-out>
+        <system-err></system-err>
+    </testsuite>
+</testsuites>
