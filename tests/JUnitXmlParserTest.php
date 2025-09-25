@@ -248,4 +248,26 @@ class JUnitXmlParserTest extends TestCase
         // Parsing a file with 10.000 test cases should not use 15MB RAM or more.
         $this->assertLessThanOrEqual(1024 * 1024 * 15, memory_get_usage());
     }
+
+    #[Test]
+    public function it_parses_test_suites_with_empty_properties_elements(): void
+    {
+        $result = $this->parser->parse(__DIR__ . '/fixtures/empty_properties.xml');
+
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertCount(1, $result->getTestSuites());
+
+        $testSuite = $result->getTestSuites()[0];
+        $this->assertEquals('Test Suite With Empty Properties', $testSuite->getName());
+        $this->assertEquals(2, $testSuite->getNumberOfTests());
+        $this->assertCount(2, $testSuite->getTestCases());
+
+        // Verify properties is empty array
+        $this->assertEquals([], $testSuite->getProperties());
+
+        // Verify test cases were parsed correctly
+        $this->assertEquals('Test One', $testSuite->getTestCases()[0]->getName());
+        $this->assertEquals('Test Two', $testSuite->getTestCases()[1]->getName());
+        $this->assertEquals('ExampleTests', $testSuite->getTestCases()[0]->getClassName());
+    }
 }

@@ -166,6 +166,10 @@ class JUnitXmlParser
     {
         $properties = [];
 
+        if ($this->reader->isEmptyElement) {
+            return $properties;
+        }
+
         while ($this->reader->read()) {
             if ($this->isEndElement('properties')) {
                 break;
