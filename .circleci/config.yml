@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  codecov: codecov/codecov@5.4.3
+  codecov: codecov/codecov@6.0.0
 
 jobs:
   build:
@@ -71,7 +71,7 @@ jobs:
           name: Run Unit Tests
           command: |
             mkdir -p ./logs/phpunit
-            vendor/bin/phpunit -d memory_limit=1G --coverage-clover coverage.xml --log-junit logs/phpunit/junit.xml --testdox-html logs/phpunit/testdox.html
+            vendor/bin/phpunit -d memory_limit=1G --coverage-clover=logs/phpunit/coverage.xml --log-junit=logs/phpunit/junit.xml --testdox-html=logs/phpunit/testdox.html
       - store_artifacts:
           path: ./logs/phpunit
           destination: phpunit
@@ -79,8 +79,11 @@ jobs:
           path: ./logs
       - codecov/upload:
           report_type: coverage
+          disable_search: true
+          files: logs/phpunit/coverage.xml
       - codecov/upload:
           report_type: test_results
+          disable_search: true
           files: logs/phpunit/junit.xml
 
 workflows:
